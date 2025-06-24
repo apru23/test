@@ -7,6 +7,6 @@
     "start": "node app.js"
   },
   "dependencies": {
-    // "http": "^0.0.1" // This line should be removed
+    // No need for any "http" dependency as it's built into Node.js
   }
 }
