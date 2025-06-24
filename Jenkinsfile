@@ -1,8 +1,12 @@
 pipeline {
     agent any
-    
+
+    tools {
+        nodejs 'NodeJS'  // This should match the name you configured in Global Tool Configuration
+    }
+
     environment {
-        NODE_HOME = tool name: 'nodejs', type: 'NodeJS'
+        NODE_ENV = 'production'
     }
 
     stages {
@@ -14,13 +18,21 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Run Tests') {
             steps {
                 script {
-                    // Here you could add tests if needed
-                    echo 'Running tests...'
-                    // Example: sh 'npm test'
+                    // Run tests (if any)
+                    sh 'npm test'  // This assumes you have a test script in package.json
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    // Optionally, run a build step if needed
+                    sh 'npm run build'  // If you have a build script in package.json
                 }
             }
         }
@@ -28,26 +40,19 @@ pipeline {
         stage('Run Application') {
             steps {
                 script {
-                    // Start the application
-                    sh 'npm start'
+                    // Run the application, typically using npm start or another command
+                    sh 'npm start'  // Or use any other command to start your app
                 }
             }
         }
     }
 
     post {
-        always {
-            echo 'Cleaning up after the run...'
-            // Clean up if necessary
-        }
-
         success {
-            echo 'Build succeeded.'
+            echo 'Build and deployment succeeded!'
         }
-
         failure {
             echo 'Build failed.'
         }
     }
 }
-
