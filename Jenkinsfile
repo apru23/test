@@ -1,35 +1,43 @@
 pipeline {
     agent any
-    tools {
-        nodejs 'NodeJS'  // Make sure 'NodeJS' is set up in Jenkins Global Tools
+
+    environment {
+        DOCKER_IMAGE = '23aparna/test'  // Replace with your Docker Hub username and repo
+        DOCKER_CREDENTIALS = 'dockerhub_credentials'  // Replace with the credentials ID in Jenkins
     }
+
     stages {
-        stage('Install Dependencies') {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/apru23/test.git'  // Replace with your GitHub repository URL
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Install npm dependencies
-                    sh 'npm install'
+                    // Build the Docker image
+                    docker.build(DOCKER_IMAGE)
                 }
             }
         }
 
-        // Remove or comment out the 'Build' stage if it's not needed
-        /* stage('Build') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    // Run build (if any)
-                    sh 'npm run build'
+                    // Login to Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS) {
+                        // Push the Docker image to Docker Hub
+                        docker.image(DOCKER_IMAGE).push()
+                    }
                 }
             }
-        } */
+        }
+    }
 
-        stage('Run Application') {
-            steps {
-                script {
-                    // Run the application, typically using npm start or another command
-                    sh 'npm start'  // Or use any other command to start your app
-                }
-            }
+    post {
+        always {
+            cleanWs()  // Clean up the workspace after the pipeline completes
         }
     }
 }
