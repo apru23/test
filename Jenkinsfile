@@ -1,14 +1,8 @@
 pipeline {
     agent any
-
     tools {
-        nodejs 'NodeJS'  // This should match the name you configured in Global Tool Configuration
+        nodejs 'NodeJS'  // Make sure 'NodeJS' is set up in Jenkins Global Tools
     }
-
-    environment {
-        NODE_ENV = 'production'
-    }
-
     stages {
         stage('Install Dependencies') {
             steps {
@@ -19,23 +13,15 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        // Remove or comment out the 'Build' stage if it's not needed
+        /* stage('Build') {
             steps {
                 script {
-                    // Run tests (if any)
-                    sh 'npm test'  // This assumes you have a test script in package.json
+                    // Run build (if any)
+                    sh 'npm run build'
                 }
             }
-        }
-
-        stage('Build') {
-            steps {
-                script {
-                    // Optionally, run a build step if needed
-                    sh 'npm run build'  // If you have a build script in package.json
-                }
-            }
-        }
+        } */
 
         stage('Run Application') {
             steps {
@@ -44,15 +30,6 @@ pipeline {
                     sh 'npm start'  // Or use any other command to start your app
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build and deployment succeeded!'
-        }
-        failure {
-            echo 'Build failed.'
         }
     }
 }
