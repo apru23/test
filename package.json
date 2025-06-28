@@ -1,11 +1,12 @@
+
 {
-  "name": "hello-world-app",
+  "name": "hello-node",
   "version": "1.0.0",
-  "description": "A simple Hello World app in Node.js",
+  "description": "Simple Hello World Node.js app",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"No tests specified\" && exit 0"
+    "start": "node app.js"
   },
-  "dependencies": {}
+  "author": "",
+  "license": "ISC"
 }
